@@ -1,29 +1,8 @@
-import React, { useState } from 'react';
-
-// Created a list of todos
-const mytodos = [
-	{
-		userId: 1,
-		id: 1,
-		title: 'Help Grace with a machine',
-		completed: false,
-	},
-	{
-		userId: 1,
-		id: 2,
-		title: 'Talk to Lyndah Kamasaka',
-		completed: false,
-	},
-	{
-		userId: 1,
-		id: 3,
-		title: 'Akapesh asks Felix for stipend',
-		completed: false,
-	},
-];
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const App = () => {
-	const [todos, setTodo] = useState(mytodos);
+	const [todos, setTodos] = useState([]);
 	const [newTodo, setNewTodo] = useState('');
 
 	// Add a new todo
@@ -36,13 +15,25 @@ const App = () => {
 			completed: false,
 		};
 		// Retain all the previous todos
-		setTodo([...todos, todo]);
+		setTodos([...todos, todo]);
 		setNewTodo('');
 	};
 
 	const handleChange = (event) => {
 		setNewTodo(event.target.value);
 	};
+
+	const getTodos = async () => {
+		const response = await axios.get(
+			'http://jsonplaceholder.typicode.com/posts?_page=1&_limit=5'
+		);
+		const { data: todos } = response;
+		setTodos(todos);
+	};
+
+	useEffect(() => {
+		getTodos();
+	}, []);
 
 	return (
 		<div id="container">
